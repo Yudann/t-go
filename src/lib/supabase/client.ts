@@ -1,4 +1,4 @@
-import { Database } from '@/integration/supabase/types';
+import { Database } from '@/types/types';
 import { createClient } from '@supabase/supabase-js';
 
 // Next.js environment variables
