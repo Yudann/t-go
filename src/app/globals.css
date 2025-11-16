@@ -5,13 +5,13 @@
   /* Color System */
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
-  
+
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
-  
+
   --color-popover: hsl(var(--popover));
   --color-popover-foreground: hsl(var(--popover-foreground));
-  
+
   /* Primary Colors */
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
@@ -19,47 +19,47 @@
   --color-primary-darker: hsl(var(--primary-darker));
   --color-primary-light: hsl(var(--primary-light));
   --color-primary-lighter: hsl(var(--primary-lighter));
-  
+
   /* Secondary Colors */
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
-  
+
   /* Muted Colors */
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
-  
+
   /* Accent Colors */
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
-  
+
   /* Destructive Colors */
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
-  
+
   /* Border & Input */
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
-  
+
   /* Custom Backgrounds */
   --color-bg-body: hsl(var(--bg-body));
   --color-bg-section: hsl(var(--bg-section));
   --color-bg-accent: hsl(var(--bg-accent));
-  
+
   /* Custom Text */
   --color-text-primary: hsl(var(--text-primary));
   --color-text-secondary: hsl(var(--text-secondary));
   --color-text-muted: hsl(var(--text-muted));
-  
+
   /* Border Radius */
   --radius-lg: 0.75rem;
   --radius-md: calc(0.75rem - 2px);
   --radius-sm: calc(0.75rem - 4px);
-  
+
   /* Font Families */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
+
   /* Animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -80,7 +80,7 @@
     /* Primary: Purple (#7B2CBF) */
     --primary: 282 65% 46%;
     --primary-foreground: 0 0% 100%;
-    
+
     /* Primary variants */
     --primary-dark: 282 70% 35%;
     --primary-darker: 282 75% 24%;
@@ -162,35 +162,43 @@
 
 @layer utilities {
   /* Gradient Utilities */
-  .bg-gradient-primary {
+  .bg-linear-primary {
     background: linear-gradient(135deg, hsl(282 65% 46%), hsl(282 60% 58%));
   }
-  
-  .bg-gradient-hero {
-    background: linear-gradient(135deg, hsl(282 65% 46%) 0%, hsl(282 55% 72%) 100%);
+
+  .bg-linear-hero {
+    background: linear-gradient(
+      135deg,
+      hsl(282 65% 46%) 0%,
+      hsl(282 55% 72%) 100%
+    );
   }
 
   /* Shadow Utilities */
   .shadow-primary {
     box-shadow: 0 10px 30px -10px hsl(282 65% 46% / 0.3);
   }
-  
+
   .shadow-card {
     box-shadow: 0 4px 20px -4px hsl(282 65% 46% / 0.15);
   }
 
-  .dark .bg-gradient-primary {
+  .dark .bg-linear-primary {
     background: linear-gradient(135deg, hsl(282 60% 58%), hsl(282 55% 72%));
   }
-  
-  .dark .bg-gradient-hero {
-    background: linear-gradient(135deg, hsl(282 65% 46%) 0%, hsl(282 55% 72%) 100%);
+
+  .dark .bg-linear-hero {
+    background: linear-gradient(
+      135deg,
+      hsl(282 65% 46%) 0%,
+      hsl(282 55% 72%) 100%
+    );
   }
 
   .dark .shadow-primary {
     box-shadow: 0 10px 30px -10px hsl(282 60% 58% / 0.4);
   }
-  
+
   .dark .shadow-card {
     box-shadow: 0 4px 20px -4px hsl(282 60% 58% / 0.2);
   }
@@ -220,7 +228,7 @@
 }
 
 /* Leaflet CSS */
-@import 'leaflet/dist/leaflet.css';
+@import "leaflet/dist/leaflet.css";
 
 /* Base styles */
 * {
