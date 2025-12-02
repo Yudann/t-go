@@ -124,6 +124,7 @@ export type Database = {
           travel_date: string
           updated_at: string
           user_id: string
+          payment_status: string | null
         }
         Insert: {
           created_at?: string
@@ -138,6 +139,7 @@ export type Database = {
           travel_date: string
           updated_at?: string
           user_id: string
+          payment_status?: string | null
         }
         Update: {
           created_at?: string
@@ -152,6 +154,7 @@ export type Database = {
           travel_date?: string
           updated_at?: string
           user_id?: string
+          payment_status?: string | null
         }
         Relationships: [
           {
@@ -161,6 +164,57 @@ export type Database = {
             referencedRelation: "routes"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      payments: {
+        Row: {
+          id: string
+          ticket_id: string | null
+          user_id: string | null
+          amount: number
+          payment_method: string | null
+          payment_status: string | null
+          transaction_id: string | null
+          paid_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          ticket_id?: string | null
+          user_id?: string | null
+          amount: number
+          payment_method?: string | null
+          payment_status?: string | null
+          transaction_id?: string | null
+          paid_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          ticket_id?: string | null
+          user_id?: string | null
+          amount?: number
+          payment_method?: string | null
+          payment_status?: string | null
+          transaction_id?: string | null
+          paid_at?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
         ]
       }
     }
@@ -193,3 +247,4 @@ export type Ticket = Tables<'tickets'> & {
   routes?: Pick<Route, 'name' | 'route_code' | 'color'>
 }
 export type Profile = Tables<'profiles'>
+export type Payment = Tables<'payments'>

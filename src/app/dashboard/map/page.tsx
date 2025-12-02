@@ -100,6 +100,7 @@ export default function MapPage() {
         .order("route_code");
 
       if (routesError) throw routesError;
+      console.log(routesData);
 
       // Fetch route stops
       const { data: stopsData, error: stopsError } = await supabase
@@ -144,7 +145,7 @@ export default function MapPage() {
     setProcessingBooking(true);
 
     try {
-      // Generate QR code data
+      // Generate QR code data (initial)
       const qrCodeData = JSON.stringify({
         ticket_id: `TKT-${Date.now()}`,
         route_id: bookingData.route.id,
@@ -154,7 +155,7 @@ export default function MapPage() {
         timestamp: new Date().toISOString(),
       });
 
-      // Insert ticket ke database
+      // Insert ticket ke database dengan status pending
       const { data: ticketData, error: ticketError } = await supabase
         .from("tickets")
         .insert([
@@ -166,7 +167,8 @@ export default function MapPage() {
             passenger_count: bookingData.passengerCount,
             total_fare: bookingData.route.fare * bookingData.passengerCount,
             qr_code: qrCodeData,
-            status: "active",
+            status: "pending", // Status pending sebelum bayar
+            payment_status: "pending", // Payment status pending
             travel_date: bookingData.travelDate,
           },
         ])
@@ -184,23 +186,26 @@ export default function MapPage() {
 
       if (ticketError) throw ticketError;
 
-      console.log("Ticket created:", ticketData);
+      console.log("Ticket created (pending):", ticketData);
 
-      // Tampilkan success message
-      toast.success("Tiket berhasil dipesan!", {
-        description: `Tiket untuk ${bookingData.route.name} telah dibuat`,
-        duration: 4000,
-        action: {
-          label: "Lihat Tiket",
-          onClick: () => router.push("/dashboard/ticket"),
-        },
+      // Redirect ke halaman pembayaran
+      const params = new URLSearchParams({
+        ticketId: ticketData.id,
+        routeName: bookingData.route.name,
+        totalFare: (bookingData.route.fare * bookingData.passengerCount).toString(),
+        passengerCount: bookingData.passengerCount.toString(),
+        startPoint: bookingData.route.start_point,
+        endPoint: bookingData.route.end_point,
+        travelDate: bookingData.travelDate,
       });
+
+      router.push(`/dashboard/payment?${params.toString()}`);
 
       // Tutup bottom sheet
       handleCloseBottomSheet();
     } catch (error) {
       console.error("Error creating ticket:", error);
-      toast.error("Gagal memesan tiket", {
+      toast.error("Gagal memproses pemesanan", {
         description: "Silakan coba lagi beberapa saat",
       });
     } finally {

@@ -11,25 +11,8 @@ const DEFAULT_CENTER = {
 
 const DEFAULT_ZOOM = 12;
 
-interface Route {
-  id: string;
-  name: string;
-  route_code: string;
-  start_point: string;
-  end_point: string;
-  estimated_time: number;
-  fare: number;
-  color: string;
-}
+import { Route, RouteStop } from "@/types/types";
 
-interface RouteStop {
-  id: string;
-  route_id: string;
-  stop_name: string;
-  stop_order: number;
-  latitude: number;
-  longitude: number;
-}
 
 interface MapContainerProps {
   routes: Route[];
@@ -145,7 +128,7 @@ export default function MapContainer({
         html: `
           <div style="position: relative; width: 40px; height: 40px;">
             <div style="
-              background: ${color};
+              background: ${color || '#7B2CBF'};
               width: 40px;
               height: 40px;
               border-radius: 50%;
@@ -181,7 +164,7 @@ export default function MapContainer({
           className: "custom-stop-marker",
           html: `
             <div style="
-              background: ${color};
+              background: ${color || '#7B2CBF'};
               width: 28px;
               height: 28px;
               border-radius: 50%;
@@ -219,7 +202,7 @@ export default function MapContainer({
             cursor: pointer;
           ">
             <div style="
-              background: ${color};
+              background: ${color || '#7B2CBF'};
               width: 8px;
               height: 8px;
               border-radius: 50%;
@@ -245,7 +228,7 @@ export default function MapContainer({
         ]);
 
         const polyline = L.polyline(coordinates, {
-          color: route.color,
+          color: route.color || '#7B2CBF',
           weight: 4,
           opacity: 0.7,
           smoothFactor: 1,
@@ -264,13 +247,13 @@ export default function MapContainer({
           // Use car icon for start point
           if (index === 0) {
             const carMarker = L.marker([stop.latitude, stop.longitude], {
-              icon: createCarIcon(route.color),
+              icon: createCarIcon(route.color || '#7B2CBF'),
             })
               .addTo(map)
               .bindPopup(
                 `
                 <div style="text-align: center; min-width: 150px;">
-                  <strong style="color: ${route.color}">${route.route_code}</strong><br/>
+                  <strong style="color: ${route.color || '#7B2CBF'}">${route.route_code}</strong><br/>
                   <small>${stop.stop_name}</small><br/>
                   <small style="color: green;">🚏 Titik Awal</small>
                 </div>
@@ -283,7 +266,7 @@ export default function MapContainer({
           } else {
             // Regular stop markers
             const stopMarker = L.marker([stop.latitude, stop.longitude], {
-              icon: createStopIcon(route.color, isStartOrEnd),
+              icon: createStopIcon(route.color || '#7B2CBF', isStartOrEnd),
             })
               .addTo(map)
               .bindPopup(

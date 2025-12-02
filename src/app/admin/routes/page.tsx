@@ -121,6 +121,15 @@ export default function RoutesManagement() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => window.location.href = `/admin/routes/${route.id}/stops`}
+              className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+              title="Kelola Halte"
+            >
+              <MapPin className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => handleDeleteRoute(route.id)}
               className="text-red-600 hover:text-red-700 hover:bg-red-50"
             >

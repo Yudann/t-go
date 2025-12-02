@@ -16,16 +16,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-interface Route {
-  id: string;
-  name: string;
-  route_code: string;
-  start_point: string;
-  end_point: string;
-  estimated_time: number;
-  fare: number;
-  color: string;
-}
+import { Route } from "@/types/types";
 
 interface MapBottomSheetProps {
   route: Route;
@@ -281,10 +272,10 @@ function RouteHeader({ route }: { route: Route }) {
     <>
       <motion.div
         className="inline-block px-4 py-2 rounded-full mb-4"
-        style={{ backgroundColor: `${route.color}20` }}
+        style={{ backgroundColor: `${route.color || '#7B2CBF'}20` }}
         variants={itemVariants}
       >
-        <span className="text-sm font-bold" style={{ color: route.color }}>
+        <span className="text-sm font-bold" style={{ color: route.color || '#7B2CBF' }}>
           {route.route_code}
         </span>
       </motion.div>
