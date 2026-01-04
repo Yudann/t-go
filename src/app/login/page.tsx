@@ -239,6 +239,14 @@ const LoginPage = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-bg-body outline-none transition-all duration-300 focus:border-primary focus:bg-white focus:shadow-lg focus:shadow-primary/20 text-sm sm:text-base"
                   />
+                  <div className="mt-2 text-right">
+                    <Link
+                      href="/forgot-password"
+                      className="text-primary-dark text-sm font-medium hover:text-primary transition-colors"
+                    >
+                      Lupa Password?
+                    </Link>
+                  </div>
                 </motion.div>
 
                 <motion.div variants={itemVariants} className="pt-4">

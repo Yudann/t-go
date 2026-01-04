@@ -24,7 +24,8 @@ const SecurityPage = () => {
       label: 'Ubah Kata Sandi', 
       desc: 'Terakhir diubah 3 bulan lalu', 
       color: 'text-purple-500', 
-      bg: isDarkMode ? 'bg-purple-900/20' : 'bg-purple-50' 
+      bg: isDarkMode ? 'bg-purple-900/20' : 'bg-purple-50',
+      path: '/dashboard/profile/security/change-password'
     },
     { 
       icon: <Fingerprint size={20} />, 
@@ -75,7 +76,11 @@ const SecurityPage = () => {
           <h3 className="px-3 text-[10px] font-black text-gray-400 uppercase tracking-[3px]">Pengaturan</h3>
           <div className={`rounded-[32px] overflow-hidden border shadow-sm transition-colors ${isDarkMode ? 'bg-[#1A1A20] border-gray-800' : 'bg-white border-gray-100'}`}>
             {securityOptions.map((item, idx) => (
-              <div key={idx} className={`w-full flex items-center justify-between p-5 transition-all ${idx !== securityOptions.length - 1 ? (isDarkMode ? 'border-b border-gray-800' : 'border-b border-gray-100') : ''}`}>
+              <button 
+                key={idx} 
+                onClick={() => item.path && router.push(item.path)}
+                className={`w-full flex items-center justify-between p-5 transition-all ${!item.toggle ? 'active:bg-purple-500/5 cursor-pointer' : 'cursor-default'} ${idx !== securityOptions.length - 1 ? (isDarkMode ? 'border-b border-gray-800' : 'border-b border-gray-100') : ''}`}
+              >
                 <div className="flex items-center gap-4 text-left">
                   <div className={`${item.bg} ${item.color} w-11 h-11 rounded-[18px] flex items-center justify-center shadow-sm`}>
                     {item.icon}
@@ -92,7 +97,7 @@ const SecurityPage = () => {
                 ) : (
                   <ChevronRight size={16} className="text-gray-400" />
                 )}
-              </div>
+              </button>
             ))}
           </div>
         </section>

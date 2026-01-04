@@ -51,8 +51,8 @@ const Dashboard = () => {
   const { data: routes = [], isLoading: routesLoading } = useRoutes();
   const { data: tickets = [] } = useUserTickets();
   const { data: transactions = [] } = useWalletTransactions(10);
+  
 
-  const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRouteForBooking, setSelectedRouteForBooking] = useState<Route | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -75,11 +75,7 @@ const Dashboard = () => {
     }
   }, [user, router]);
 
-  useEffect(() => {
-    filterRoutes();
-  }, [searchQuery, routes, activeCategory]);
-
-  const filterRoutes = () => {
+  const filteredRoutes = useMemo(() => {
     let filtered = routes;
 
     // Filter by search query
@@ -93,8 +89,8 @@ const Dashboard = () => {
       );
     }
 
-    setFilteredRoutes(filtered);
-  };
+    return filtered;
+  }, [routes, searchQuery]);
 
   const handleBookRoute = (route: Route) => {
     setSelectedRouteForBooking(route);

@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from "@/components/ui/dialog";
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Users, Calendar, ArrowRight, ArrowLeft, Wallet } from "lucide-react";
 import { AngkotIcon } from "@/components/AngkotIcon";
 import { useThemeStore } from "@/lib/store";
@@ -75,6 +77,9 @@ const BookingModal = ({ isOpen, onClose, route, onConfirm }: BookingModalProps) 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className={`sm:max-w-md p-0 overflow-hidden border-none shadow-2xl rounded-[40px] ${isDarkMode ? 'bg-[#121216]' : 'bg-[#FAFBFF]'}`}>
+        <VisuallyHidden>
+          <DialogTitle>Booking Perjalanan</DialogTitle>
+        </VisuallyHidden>
         
         {/* Header */}
         <div className={`p-6 pt-8 pb-6 rounded-b-[40px] shadow-sm space-y-4 border-b transition-all ${isDarkMode ? 'bg-[#1A1A20] border-gray-800' : 'bg-white border-gray-100 shadow-gray-200/30'}`}>

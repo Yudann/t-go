@@ -30,7 +30,10 @@ export default function AdminAnalyticsPage() {
     totalRevenue: 0,
     totalTickets: 0,
     totalPassengers: 0,
-    averageOccupancy: 0
+    averageOccupancy: 0,
+    revenueTrend: 0,
+    ticketsTrend: 0,
+    passengersTrend: 0
   });
   const [revenueData, setRevenueData] = useState<any[]>([]);
   const [topRoutes, setTopRoutes] = useState<any[]>([]);
@@ -43,7 +46,9 @@ export default function AdminAnalyticsPage() {
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      const { data, error } = await (supabase as any).rpc("get_admin_analytics");
+      const { data, error } = await (supabase as any).rpc("get_admin_analytics", {
+        p_time_range: timeRange
+      });
 
       if (error) throw error;
 
@@ -52,7 +57,10 @@ export default function AdminAnalyticsPage() {
           totalRevenue: data.stats?.totalRevenue || 0,
           totalTickets: data.stats?.totalTickets || 0,
           totalPassengers: data.stats?.totalPassengers || 0,
-          averageOccupancy: data.stats?.occupancy || 0
+          averageOccupancy: data.stats?.occupancy || 0,
+          revenueTrend: data.stats?.revenueTrend || 0,
+          ticketsTrend: data.stats?.ticketsTrend || 0,
+          passengersTrend: data.stats?.passengersTrend || 0
         });
         setRevenueData(data.revenueData || []);
         setTopRoutes(data.topRoutes || []);
@@ -131,32 +139,32 @@ export default function AdminAnalyticsPage() {
                     value={`Rp ${stats.totalRevenue.toLocaleString('id-ID')}`}
                     icon={TrendingUp}
                     colorClass="bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
-                    trend="up"
-                    trendValue="+12.5%"
+                    trend={stats.revenueTrend >= 0 ? 'up' : 'down'}
+                    trendValue={`${stats.revenueTrend >= 0 ? '+' : ''}${stats.revenueTrend}%`}
                 />
                 <MetricCard 
                     title="Tiket Terjual" 
                     value={stats.totalTickets}
                     icon={Ticket}
                     colorClass="bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400"
-                    trend="up"
-                    trendValue="+8.2%"
+                    trend={stats.ticketsTrend >= 0 ? 'up' : 'down'}
+                    trendValue={`${stats.ticketsTrend >= 0 ? '+' : ''}${stats.ticketsTrend}%`}
                 />
                 <MetricCard 
                     title="Total Penumpang" 
                     value={stats.totalPassengers}
                     icon={Users}
                     colorClass="bg-purple-100 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400"
-                    trend="up"
-                    trendValue="+15.3%"
+                    trend={stats.passengersTrend >= 0 ? 'up' : 'down'}
+                    trendValue={`${stats.passengersTrend >= 0 ? '+' : ''}${stats.passengersTrend}%`}
                 />
                 <MetricCard 
                     title="Okupansi Rata-rata" 
                     value={`${stats.averageOccupancy}%`}
                     icon={PieChart}
                     colorClass="bg-orange-100 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
-                    trend="down"
-                    trendValue="-2.1%"
+                    trend={stats.averageOccupancy >= 50 ? 'up' : 'down'}
+                    trendValue={`${stats.averageOccupancy}%`}
                 />
             </div>
 
@@ -166,33 +174,38 @@ export default function AdminAnalyticsPage() {
                 <CardHeader>
                     <CardTitle className={`text-base font-bold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         <Activity className="w-4 h-4 text-purple-500" />
-                        Tren Pendapatan (7 Hari Terakhir)
+                        Tren Pendapatan ({timeRange === '24h' ? '24 Jam' : timeRange === '7d' ? '7 Hari' : timeRange === '30d' ? '30 Hari' : 'Tahun Ini'})
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="h-[300px] flex items-end justify-between gap-2 pt-4 px-2">
-                        {revenueData.length > 0 ? revenueData.map((data, index) => (
-                            <div key={index} className="flex flex-col items-center gap-3 flex-1 group">
-                            <div className="relative w-full flex justify-center h-full items-end">
-                                <div 
-                                className="w-full max-w-[40px] bg-gradient-to-t from-purple-600 to-indigo-500 rounded-t-lg transition-all duration-300 group-hover:from-purple-500 group-hover:to-indigo-400 opacity-80 group-hover:opacity-100 relative"
-                                style={{ height: `${Math.max((data.value / (stats.totalRevenue || 1)) * 1000, 10)}%`, minHeight: '20px' }}
-                                >
-                                     {/* Tooltip */}
-                                     <div className="opacity-0 group-hover:opacity-100 absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg pointer-events-none whitespace-nowrap transition-all transform translate-y-2 group-hover:translate-y-0 shadow-xl z-10 border border-gray-700">
-                                         Rp {data.value.toLocaleString('id-ID')}
-                                         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45 border-r border-b border-gray-700"></div>
-                                     </div>
+                    {(() => {
+                      const maxValue = revenueData.length > 0 ? Math.max(...revenueData.map(d => d.value)) : 0;
+                      return (
+                        <div className="h-[300px] flex items-end justify-between gap-2 pt-4 px-2">
+                            {revenueData.length > 0 ? revenueData.map((data, index) => (
+                                <div key={index} className="flex flex-col items-center gap-3 flex-1 group">
+                                <div className="relative w-full flex justify-center h-[250px] items-end">
+                                    <div 
+                                    className="w-full max-w-[40px] bg-gradient-to-t from-purple-600 to-indigo-500 rounded-t-lg transition-all duration-300 group-hover:from-purple-500 group-hover:to-indigo-400 opacity-80 group-hover:opacity-100 relative"
+                                    style={{ height: `${maxValue > 0 ? Math.max((data.value / maxValue) * 100, 5) : 5}%` }}
+                                    >
+                                         {/* Tooltip */}
+                                         <div className="opacity-0 group-hover:opacity-100 absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg pointer-events-none whitespace-nowrap transition-all transform translate-y-2 group-hover:translate-y-0 shadow-xl z-10 border border-gray-700">
+                                             Rp {data.value.toLocaleString('id-ID')}
+                                             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45 border-r border-b border-gray-700"></div>
+                                         </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <span className={`text-[10px] font-bold uppercase tracking-wider ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{data.day}</span>
-                            </div>
-                        )) : (
-                             <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
-                                 Belum ada data pendapatan minggu ini
-                             </div>
-                        )}
-                    </div>
+                                <span className={`text-[10px] font-bold uppercase tracking-wider ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{data.day}</span>
+                                </div>
+                            )) : (
+                                 <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
+                                     Belum ada data pendapatan minggu ini
+                                 </div>
+                            )}
+                        </div>
+                      );
+                    })()}
                 </CardContent>
                 </Card>
 
