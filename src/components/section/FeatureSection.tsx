@@ -14,10 +14,9 @@ const FeaturesSection = () => {
         "Temukan jalur dan rute angkot Tangerang dengan peta interaktif.",
     },
     {
-      image: "/FITUR/fitur2.jpeg",
-      title: "Jadwal Keberangkatan",
-      description:
-        "Lihat jadwal keberangkatan angkot dengan waktu yang konsisten.",
+      image: "/FITUR/fitur2.png",
+      title: "E-Ticket",
+      description: "Lihat tiket digital dan riwayat tiket dengan mudah",
     },
     {
       image: "/FITUR/fitur3.png",
@@ -62,7 +61,17 @@ const FeaturesSection = () => {
             className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary-dark hover:scale-110 active:scale-95 transition-all duration-300"
             aria-label="Previous feature"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
@@ -78,10 +87,11 @@ const FeaturesSection = () => {
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className={`absolute inset-0 transition-all duration-500 ease-in-out ${index === currentSlide
+                  className={`absolute inset-0 transition-all duration-500 ease-in-out ${
+                    index === currentSlide
                       ? "opacity-100 scale-100"
                       : "opacity-0 scale-95"
-                    }`}
+                  }`}
                 >
                   <Image
                     src={feature.image}
@@ -111,7 +121,17 @@ const FeaturesSection = () => {
             className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary-dark hover:scale-110 active:scale-95 transition-all duration-300"
             aria-label="Next feature"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="m9 18 6-6-6-6" />
             </svg>
           </button>
@@ -123,10 +143,11 @@ const FeaturesSection = () => {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`transition-all duration-300 rounded-full ${index === currentSlide
+              className={`transition-all duration-300 rounded-full ${
+                index === currentSlide
                   ? "w-8 h-3 bg-primary"
                   : "w-3 h-3 bg-gray-300 hover:bg-gray-400"
-                }`}
+              }`}
               aria-label={`Go to feature ${index + 1}`}
             />
           ))}
