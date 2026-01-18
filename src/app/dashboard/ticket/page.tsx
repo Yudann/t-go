@@ -151,6 +151,43 @@ export default function DashboardTicket() {
     }
   };
 
+  const handleExportData = () => {
+    if (tickets.length === 0) {
+      toast.error("Tidak ada tiket untuk diexport");
+      return;
+    }
+
+    const headers = ["Ticket ID", "Route Code", "Route Name", "Start Point", "End Point", "Travel Date", "Status", "Fare", "QR Code"];
+    const rows = tickets.map(t => [
+      t.id,
+      t.routes?.route_code || '-',
+      t.routes?.name || '-',
+      t.start_point,
+      t.end_point,
+      new Date(t.travel_date).toLocaleString('id-ID'),
+      t.status,
+      t.total_fare,
+      t.qr_code
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + [headers.join(","), ...rows.map(e => e.map(String).map(s => `"${s.replace(/"/g, '""')}"`).join(","))].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `my_tickets_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success("Data tiket berhasil disimpan!");
+  };
+
+  const handlePrintTicket = () => {
+    window.print();
+  };
+
   if (loading) {
     return (
       <div className={`min-h-screen flex items-center justify-center transition-colors ${isDarkMode ? 'bg-[#121216]' : 'bg-[#FDFDFF]'}`}>
@@ -167,8 +204,14 @@ export default function DashboardTicket() {
       <div className={`p-6 space-y-6 animate-in fade-in duration-500 pb-32`}>
         <div className="flex items-center justify-between pt-4">
           <h2 className={`text-2xl font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Tiket Saya</h2>
-          <div className={`p-2.5 rounded-xl border shadow-sm transition-colors ${isDarkMode ? 'bg-[#1A1A20] border-gray-800 text-gray-400' : 'bg-white border-gray-100 text-gray-500'}`}>
-            <MoreVertical size={20} />
+          <div className="flex gap-2">
+            <button 
+              onClick={handleExportData}
+              className={`p-2.5 rounded-xl border shadow-sm transition-colors ${isDarkMode ? 'bg-[#1A1A20] border-gray-800 text-gray-400' : 'bg-white border-gray-100 text-gray-500'}`}
+              title="Export Semua Data"
+            >
+              <Download size={20} />
+            </button>
           </div>
         </div>
 
@@ -269,12 +312,12 @@ export default function DashboardTicket() {
 
       {/* Ticket Detail Overlay */}
       {selectedTicket && (
-        <div className="fixed inset-0 z-[100] animate-in fade-in duration-300">
+        <div id="ticket-modal-overlay" className="fixed inset-0 z-[100] animate-in fade-in duration-300">
           <div
             onClick={() => setSelectedTicket(null)}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           ></div>
-          <div className={`absolute bottom-0 left-0 right-0 max-w-[430px] mx-auto h-[90vh] rounded-t-[45px] shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-500 overflow-hidden ${isDarkMode ? 'bg-[#0F0F13]' : 'bg-[#FDFDFF]'}`}>
+          <div id="ticket-modal-container" className={`absolute bottom-0 left-0 right-0 max-w-[430px] mx-auto h-[90vh] rounded-t-[45px] shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-500 overflow-hidden ${isDarkMode ? 'bg-[#0F0F13]' : 'bg-[#FDFDFF]'}`}>
 
             {/* Detail Header */}
             <div className="px-8 pt-8 pb-4 flex items-center justify-between">
@@ -292,9 +335,9 @@ export default function DashboardTicket() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto no-scrollbar px-8 py-4">
+            <div id="ticket-scroll-container" className="flex-1 overflow-y-auto no-scrollbar px-8 py-4">
               {/* Premium Ticket Visual */}
-              <div className={`rounded-[45px] overflow-hidden shadow-2xl relative transition-colors ${isDarkMode ? 'bg-[#1A1A20]' : 'bg-white'}`}>
+              <div id="ticket-card" className={`rounded-[45px] overflow-hidden shadow-2xl relative transition-colors ${isDarkMode ? 'bg-[#1A1A20]' : 'bg-white'}`}>
                 {/* Status Indicator Bar */}
                 <div className={`h-3 w-full ${getStatusColor(getDisplayStatus(selectedTicket))}`}></div>
 
@@ -400,7 +443,10 @@ export default function DashboardTicket() {
 
               {/* Additional Actions */}
               <div className="mt-8 mb-10 space-y-4">
-                <button className="w-full py-5 bg-[#7B2CBF] text-white rounded-[30px] font-black flex items-center justify-center gap-3 shadow-xl shadow-purple-900/20 active:scale-95 transition-all uppercase text-xs tracking-[2px]">
+                <button 
+                  onClick={handlePrintTicket}
+                  className="w-full py-5 bg-[#7B2CBF] text-white rounded-[30px] font-black flex items-center justify-center gap-3 shadow-xl shadow-purple-900/20 active:scale-95 transition-all uppercase text-xs tracking-[2px]"
+                >
                   <Download size={18} />
                   Simpan E-Ticket (PDF)
                 </button>
