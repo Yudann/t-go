@@ -131,6 +131,49 @@ export default function AdminAnalyticsPage() {
     </Card>
   );
 
+  const handleExport = () => {
+    if (revenueData.length === 0) {
+      toast.error("Tidak ada data revenue untuk diexport");
+      return;
+    }
+    
+    // Define CSV headers
+    const headers = ["Hari", "Pendapatan (Rp)"];
+    
+    // Map data to CSV rows
+    const rows = revenueData.map(item => [
+      item.day,
+      item.value
+    ]);
+    
+    // Include Summary Stats at the top
+    const summaryRows = [
+      ["Summary Report", ""],
+      ["Total Pendapatan", stats.totalRevenue],
+      ["Total Tiket", stats.totalTickets],
+      ["Total Penumpang", stats.totalPassengers],
+      ["Okupansi Rata-rata", stats.averageOccupancy + "%"],
+      ["", ""], // Empty line
+      ["Daily Breakdown", ""]
+    ];
+
+    // Join everything
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + summaryRows.map(e => e.join(",")).join("\n") + "\n"
+      + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      
+    // Create download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `tgo_analytics_${timeRange}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success("Laporan analitik berhasil diexport!");
+  };
+
   return (
     <div
       className={`p-6 space-y-6 min-h-full ${
@@ -172,6 +215,7 @@ export default function AdminAnalyticsPage() {
             </SelectContent>
           </Select>
           <Button
+            onClick={handleExport}
             variant="outline"
             size="sm"
             className={`h-9 border-0 ${
@@ -181,7 +225,7 @@ export default function AdminAnalyticsPage() {
             }`}
           >
             <Download className="w-3 h-3 mr-2" />
-            Export PDF
+            Export CSV
           </Button>
         </div>
       </div>
