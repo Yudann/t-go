@@ -81,6 +81,44 @@ export default function AdminTicketsPage() {
     }
   };
 
+  const handleExport = () => {
+    if (tickets.length === 0) {
+      toast.error("Tidak ada data untuk diexport");
+      return;
+    }
+    
+    // Define CSV headers
+    const headers = ["Ticket ID", "QR Code", "User Email", "Route", "Start Point", "End Point", "Status", "Price", "Date"];
+    
+    // Map data to CSV rows
+    const rows = tickets.map(ticket => [
+      ticket.id,
+      ticket.qr_code,
+      ticket.user_email || "N/A",
+      ticket.route_name || "N/A",
+      ticket.start_point,
+      ticket.end_point,
+      ticket.status,
+      ticket.total_fare,
+      new Date(ticket.created_at).toLocaleString('id-ID').replace(/,/g, ' ') // Remove commas to prevent CSV breakage
+    ]);
+    
+    // Join headers and rows
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      
+    // Create download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `tgo_tickets_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success("Data tiket berhasil diexport!");
+  };
+
   return (
     <div className={`p-6 space-y-6 min-h-full ${isDarkMode ? 'bg-[#121216] text-white' : 'bg-gray-50 text-gray-900'}`}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -90,9 +128,9 @@ export default function AdminTicketsPage() {
             Pantau dan validasi tiket perjalanan pengguna.
           </p>
         </div>
-        <Button variant="outline" className={`gap-2 ${isDarkMode ? 'bg-gray-800 border-gray-700 text-gray-300' : 'bg-white'}`}>
+        <Button onClick={handleExport} variant="outline" className={`gap-2 ${isDarkMode ? 'bg-gray-800 border-gray-700 text-gray-300' : 'bg-white'}`}>
              <Download className="w-4 h-4" />
-             Export Data
+             Export CSV
         </Button>
       </div>
 
