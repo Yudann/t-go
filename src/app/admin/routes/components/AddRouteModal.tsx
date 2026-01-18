@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface AddRouteModalProps {
   isOpen: boolean;
@@ -65,9 +66,9 @@ export default function AddRouteModal({
         fare: 5000,
         color: "#7B2CBF",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding route:", error);
-      alert("Gagal menambahkan rute");
+      toast.error(error.message || "Gagal menambahkan rute");
     } finally {
       setLoading(false);
     }

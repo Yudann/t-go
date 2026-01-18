@@ -15,6 +15,7 @@ import {
   Wallet,
   Bus,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -87,10 +88,10 @@ export default function RoutesManagement() {
       if (error) throw error;
 
       setRoutes(routes.filter((route) => route.id !== routeId));
-      alert("Rute berhasil dihapus");
-    } catch (error) {
+      toast.success("Rute berhasil dihapus");
+    } catch (error: any) {
       console.error("Error deleting route:", error);
-      alert("Gagal menghapus rute");
+      toast.error(error.message || "Gagal menghapus rute");
     }
   };
 
