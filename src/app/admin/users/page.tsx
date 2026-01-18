@@ -101,7 +101,7 @@ export default function AdminUsersPage() {
              <div className="flex justify-between items-start">
                 <div>
                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Total Pengguna</p>
-                    <h3 className="text-2xl font-black mt-1">{users.length}</h3>
+                    <h3 className={`text-2xl font-black mt-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{users.length}</h3>
                 </div>
                 <div className="p-2 bg-purple-100 rounded-lg dark:bg-purple-900/20">
                     <User className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -114,7 +114,7 @@ export default function AdminUsersPage() {
              <div className="flex justify-between items-start">
                 <div>
                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">User Baru (Bulan Ini)</p>
-                    <h3 className="text-2xl font-black mt-1">
+                    <h3 className={`text-2xl font-black mt-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {users.filter(u => {
                             if (!u.created_at) return false;
                             const date = new Date(u.created_at);
@@ -135,7 +135,7 @@ export default function AdminUsersPage() {
                 <div>
                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Pengguna Aktif</p>
                      {/* Mock active users (e.g. users with recent tickets) - simplifying for now */}
-                    <h3 className="text-2xl font-black mt-1">{Math.floor(users.length * 0.75)}</h3>
+                    <h3 className={`text-2xl font-black mt-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{Math.floor(users.length * 0.75)}</h3>
                 </div>
                 <div className="p-2 bg-blue-100 rounded-lg dark:bg-blue-900/20">
                     <User className="w-4 h-4 text-blue-600 dark:text-blue-400" />
