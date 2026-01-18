@@ -265,3 +265,110 @@ select,
 textarea {
   font-family: inherit;
 }
+
+/* 
+  ===========================================
+  PRINT STYLES FOR E-TICKET
+  ===========================================
+*/
+@media print {
+
+  /* 1. HIDE EVERYTHING by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* 2. SHOW only the necessary ticket elements */
+  #ticket-modal-overlay,
+  #ticket-modal-overlay * {
+    visibility: visible;
+  }
+
+  /* 3. RESET POSITIONING to flow naturally on paper */
+  #ticket-modal-overlay {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    background: white !important;
+    /* Force white bg for page */
+    z-index: 9999 !important;
+  }
+
+  #ticket-modal-container {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    /* Limit width for A4 readability */
+    height: auto !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    /* Add border for structure */
+    border-radius: 20px !important;
+    background: white !important;
+    /* Ensure container is white */
+    overflow: visible !important;
+    /* Ensure no scrollbars */
+  }
+
+  /* 4. FIX SCROLLABLE AREA content visibility */
+  #ticket-scroll-container {
+    overflow: visible !important;
+    height: auto !important;
+    padding: 0 !important;
+  }
+
+  /* 5. FORCE CARD STYLING for print (cleaner look) */
+  #ticket-card {
+    background-color: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Override specific dark mode text colors to black */
+  #ticket-card p,
+  #ticket-card h4,
+  #ticket-card span,
+  #ticket-card div {
+    color: black !important;
+    text-shadow: none !important;
+  }
+
+  /* Keep specific elements gray/subtle if needed */
+  #ticket-card p.text-gray-400 {
+    color: #666 !important;
+  }
+
+  /* Force background colors for visual elements (requires print-color-adjust) */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 6. HIDE UI ELEMENTS not needed for print */
+  button,
+  .mt-8.mb-10.space-y-4,
+  /* Bottom action buttons container */
+  .px-8.pt-8.pb-4.flex.items-center.justify-between
+
+  /* Header with close/share buttons */
+    {
+    display: none !important;
+  }
+
+  /* Adjust spacing */
+  .p-8.pb-10 {
+    padding: 20px !important;
+  }
+
+  /* Handle page break */
+  #ticket-card {
+    page-break-inside: avoid;
+  }
+}

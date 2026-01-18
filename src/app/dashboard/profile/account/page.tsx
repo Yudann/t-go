@@ -102,7 +102,7 @@ const AccountInfoPage = () => {
                   value={formData.full_name}
                   onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                   placeholder="Masukkan nama lengkap"
-                  className="w-full p-4 pl-3 bg-transparent outline-none text-sm font-bold text-gray-800 dark:text-gray-200"
+                  className={`w-full p-4 pl-3 bg-transparent outline-none text-sm font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}
                 />
               </div>
             </div>
@@ -119,7 +119,7 @@ const AccountInfoPage = () => {
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="08xxxxxxxxxx"
-                  className="w-full p-4 pl-3 bg-transparent outline-none text-sm font-bold text-gray-800 dark:text-gray-200"
+                  className={`w-full p-4 pl-3 bg-transparent outline-none text-sm font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}
                 />
               </div>
             </div>
